@@ -9,7 +9,7 @@ from flask_swagger import swagger
 from flask_cors import CORS
 from utils import APIException, generate_sitemap
 from admin import setup_admin
-from models import db, User, Favorites,Cart,Orders,Transactions
+from models import db, User, Favorites,Cart_Product,Orders,Transactions
 
 #from models import Person
 
@@ -107,6 +107,51 @@ def detelete_favorite(id):
     favorites = Favorites.query.all()
     favorites = list(map(lambda x: x.serialize(), favorites))
     return jsonify(favorites), 200
+
+
+
+@app.route('/cart_product/<int:id>', methods=['GET'])
+def get_single_cart(id):
+
+    single_cart = Cart_Product.query.get(id)
+    if single_cart is None:
+        raise APIException("Not cart was Found", status_code=404)
+    
+    return jsonify(single_cart.serialize()),200
+
+
+# @app.route('/cart_product', methods=['GET'])
+# def get_all_cart():
+
+#     all_favorites = Favorites.query.all()
+#     if all_favorites is None:
+#         raise APIException("Not favorites was Found", status_code=404)
+    
+#     return jsonify([single_favorites.serialize() for single_favorites in all_favorites]),200
+
+
+@app.route('/cart_product', methods=['POST'])
+def create_cart_product():
+
+    body = request.get_json()
+    item = body
+    print(body)
+    if body is None:
+        raise APIException("Invalid Body", status_code=400)
+    new_cart_product = Cart_Product(
+        name= item["name"],
+        price=item["price"],
+        img=item["img"],
+        continent=item["continent"],
+        country=item["country"],
+       
+
+    )
+   
+    db.session.add(new_cart_product) 
+    db.session.commit()
+    return jsonify(new_cart_product.serialize()), 200
+
 
 
 

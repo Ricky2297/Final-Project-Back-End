@@ -50,7 +50,7 @@ class Favorites(db.Model):
             # do not serialize the password, its a security breach
         }
 
-class Cart(db.Model):
+class Cart_Product(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(120), unique=True, nullable=False)
     price = db.Column(db.String(120), unique=True, nullable=False)
@@ -61,7 +61,7 @@ class Cart(db.Model):
 
 
     def __repr__(self):
-        return '<Cart %r>' % self.username
+        return '<Cart_Product %r>' % self.username
 
     def serialize(self):
         return {
