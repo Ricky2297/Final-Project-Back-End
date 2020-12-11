@@ -120,14 +120,14 @@ def get_single_cart(id):
     return jsonify(single_cart.serialize()),200
 
 
-# @app.route('/cart_product', methods=['GET'])
-# def get_all_cart():
+@app.route('/cart_product', methods=['GET'])
+def get_all_cart():
 
-#     all_favorites = Favorites.query.all()
-#     if all_favorites is None:
-#         raise APIException("Not favorites was Found", status_code=404)
+    all_cart_product = Cart_Product.query.all()
+    if all_cart_product is None:
+        raise APIException("Not favorites was Found", status_code=404)
     
-#     return jsonify([single_favorites.serialize() for single_favorites in all_favorites]),200
+    return jsonify([single_cart.serialize() for single_cart in all_cart_product]),200
 
 
 @app.route('/cart_product', methods=['POST'])
