@@ -138,6 +138,7 @@ def create_cart_product():
     print(body)
     if body is None:
         raise APIException("Invalid Body", status_code=400)
+    
     new_cart_product = Cart_Product(
         name= item["name"],
         price=item["price"],
@@ -147,10 +148,22 @@ def create_cart_product():
        
 
     )
-   
     db.session.add(new_cart_product) 
     db.session.commit()
     return jsonify(new_cart_product.serialize()), 200
+
+@app.route('/cart_product/<int:id>', methods=['DELETE'])
+def detelete_cart_product(id):
+
+    cart_product = Cart_Product.query.get(id)
+    if cart_product is None:
+        raise APIException('the favorite is not exist', status_code = 404) 
+    db.session.delete(cart_product)
+    db.session.commit()
+    cart_product = Cart_Product.query.all()
+    cart_product = list(map(lambda x: x.serialize(), cart_product))
+    return jsonify(cart_product), 200
+    
 
 
 
