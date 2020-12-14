@@ -129,7 +129,7 @@ def get_all_cart():
     
     return jsonify([single_cart.serialize() for single_cart in all_cart_product]),200
 
-
+# //
 @app.route('/cart_product', methods=['POST'])
 def create_cart_product():
 
