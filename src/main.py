@@ -9,7 +9,7 @@ from flask_swagger import swagger
 from flask_cors import CORS
 from utils import APIException, generate_sitemap
 from admin import setup_admin
-from models import db, User, Favorites,Cart_Product,Orders,Transactions
+from models import db, User, Favorites,Cart_Product,Orders,Transactions,Product
 
 #from models import Person
 
@@ -40,6 +40,50 @@ def handle_hello():
     }
 
     return jsonify(response_body), 200
+
+
+# Aqui van el POST Y el GET de los productos//
+
+@app.route('/product', methods=['POST'])
+def create_product():
+
+    body = request.get_json()
+    item = body
+    print(body)
+    if body is None:
+        raise APIException("Invalid Body", status_code=400)
+    
+    new_product = Product(
+        name= item["name"],
+        price=item["price"],
+        img=item["img"],
+        continent=item["continent"],
+        country=item["country"],
+       
+    )
+    db.session.add(new_product) 
+    db.session.commit()
+    return jsonify(new_product.serialize()), 200
+
+@app.route('/product/<int:id>', methods=['GET'])
+def get_single_product(id):
+
+    single_product = Product.query.get(id)
+    if single_product is None:
+        raise APIException("Not cart was Found", status_code=404)
+    
+    return jsonify(single_product.serialize()),200
+
+@app.route('/product', methods=['GET'])
+def get_cart():
+
+    all_product = Product.query.all()
+    if all_product is None:
+        raise APIException("Not favorites was Found", status_code=404)
+    
+    return jsonify([single_product.serialize() for single_product in all_product]),200
+
+# Aqui acaban los Productos
 
 @app.route('/favorites/<int:id>', methods=['GET'])
 def get_single_favorite(id):
