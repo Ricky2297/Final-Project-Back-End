@@ -31,16 +31,34 @@ def handle_invalid_usage(error):
 @app.route('/')
 def sitemap():
     return generate_sitemap(app)
+# Aqui va el User
 
-@app.route('/user', methods=['GET'])
-def handle_hello():
+@app.route('/new-user', methods=['POST', 'GET'])
+def handle_user():
+    """
+    Create user and retrieve all users
+    """
+    # POST request
+    
+    if request.method == 'POST':
+        body = request.get_json()
+        if body is None:
+            raise APIException("You need to specify the request body as a json object", status_code=400)
+        if 'email' not in body:
+            raise APIException('You need to specify the email', status_code=400)
+        if 'password' not in body:
+            raise APIException('You need to specify the password', status_code=400)    
+        user1 = User(email=body['email'], password=body['password'], first_name=body['first_name'], last_name=body['last_name'], phone_number=body['phone_number'])
+        db.session.add(user1)
+        db.session.commit()
+        return "ok", 200
 
-    response_body = {
-        "msg": "Hello, this is your GET /user response "
-    }
-
-    return jsonify(response_body), 200
-
+    # GET request
+    if request.method == 'GET':
+        all_people = User.query.all()
+        all_people = list(map(lambda x: x.serialize(), all_people))
+        return jsonify(all_people), 200
+    return "Invalid Method", 404
 
 # Aqui van el POST Y el GET de los productos//
 
@@ -84,6 +102,8 @@ def get_cart():
     return jsonify([single_product.serialize() for single_product in all_product]),200
 
 # Aqui acaban los Productos
+
+# Aqui comienzan los favoritos
 
 @app.route('/favorites/<int:id>', methods=['GET'])
 def get_single_favorite(id):
@@ -151,6 +171,8 @@ def detelete_favorite(id):
     favorites = Favorites.query.all()
     favorites = list(map(lambda x: x.serialize(), favorites))
     return jsonify(favorites), 200
+
+# Aqui acaban los favoritos
 
 
 
