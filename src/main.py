@@ -138,7 +138,7 @@ def create_favorites():
         img=item["img"],
         continent=item["continent"],
         country=item["country"],
-        description=item["description"]
+       
 
     )
    

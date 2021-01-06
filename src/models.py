@@ -32,7 +32,7 @@ class Favorites(db.Model):
     img = db.Column(db.String(500), unique=True, nullable=False)
     continent = db.Column(db.String(120), unique=False, nullable=False)
     country = db.Column(db.String(120), unique=False, nullable=False)
-    description = db.Column(db.String(500), unique=False, nullable=False)
+   
     
 
     def __repr__(self):
@@ -45,8 +45,8 @@ class Favorites(db.Model):
             "price": self.price,
             "img": self.img,
             "continent": self.continent,
-            "country": self.country,
-            "description": self.description
+            "country": self.country
+           
             # do not serialize the password, its a security breach
         }
 
@@ -69,7 +69,8 @@ class Product(db.Model):
             "name": self.name,
             "price": self.price,
             "img": self.img,
-            "continent": self.continent
+            "continent": self.continent,
+            "country": self.country
             # do not serialize the password, its a security breach
         }
 
@@ -92,7 +93,8 @@ class Cart_Product(db.Model):
             "name": self.name,
             "price": self.price,
             "img": self.img,
-            "continent": self.continent
+            "continent": self.continent,
+            "country": self.country
             # do not serialize the password, its a security breach
         }
 
