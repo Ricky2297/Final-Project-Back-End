@@ -46,6 +46,8 @@ def handle_user():
             raise APIException("You need to specify the request body as a json object", status_code=400)
         if 'email' not in body:
             raise APIException('You need to specify the email', status_code=400)
+        if 'last_name' not in body:
+            raise APIException('You need to specify the last_name', status_code=400)
         if 'password' not in body:
             raise APIException('You need to specify the password', status_code=400)    
         user1 = User(email=body['email'], password=body['password'], first_name=body['first_name'], last_name=body['last_name'], phone_number=body['phone_number'])
