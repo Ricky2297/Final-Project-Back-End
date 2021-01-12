@@ -50,6 +50,8 @@ def handle_user():
             raise APIException('You need to specify the last_name', status_code=400)
         if 'password' not in body:
             raise APIException('You need to specify the password', status_code=400)    
+        if 'phone_number' not in body:
+            raise APIException('You need to specify the phoneNumber', status_code=400)    
         user1 = User(email=body['email'], password=body['password'], first_name=body['first_name'], last_name=body['last_name'], phone_number=body['phone_number'])
         db.session.add(user1)
         db.session.commit()
@@ -61,6 +63,19 @@ def handle_user():
         all_people = list(map(lambda x: x.serialize(), all_people))
         return jsonify(all_people), 200
     return "Invalid Method", 404
+
+@app.route('/new-user/<int:id>', methods=['DELETE'])
+def delete_user(id):
+
+    user = User.query.get(id)
+    if user is None:
+        raise APIException('the user is not exist', status_code = 404) 
+    db.session.delete(user)
+    db.session.commit()
+    user = User.query.all()
+    user = list(map(lambda x: x.serialize(), user))
+    return jsonify(user), 200
+
 
 # Aqui van el POST Y el GET de los productos//
 
